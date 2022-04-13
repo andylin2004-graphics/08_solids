@@ -1,5 +1,5 @@
 use crate::color::Color;
-use crate::image::Image;
+use crate::image::{Image, clear_zbuffer};
 use crate::matrix::CurveType;
 use crate::matrix::Matrix;
 use std::f32;
@@ -74,6 +74,7 @@ pub fn parse_file(
     polygons: &mut Matrix,
     screen: &mut Image,
     color: Color,
+    z_buffer: &mut Vec<Vec<f32>>,
 ) -> io::Result<()> {
     let file = File::open(&fname)?;
     let reader = BufReader::new(file);
@@ -257,10 +258,10 @@ pub fn parse_file(
                 *points = Matrix::new(0,0);
             }
             _ if doc_lines[i].starts_with('#') => {}
-            // "clear" => {
-            //     *points = Matrix::new(0, 0);
-            //     *polygons = Matrix::new(0, 0);
-            // }
+            "clear" => {
+                screen.clear();
+                clear_zbuffer(z_buffer);
+            }
             "box" => {
                 i += 1;
                 let mut params = vec![0.0; 0];
