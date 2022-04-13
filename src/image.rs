@@ -79,3 +79,16 @@ impl Image {
             .expect("failed to open image");
     }
 }
+
+/*======== void clear_zbuffer() ==========
+Inputs:   zbuffer
+Returns:
+Sets all entries in the zbufffer to LONG_MIN
+====================*/
+fn clear_zbuffer(z_buffer: &mut Vec<Vec<f32>>) {
+    for i in 0..z_buffer.len() {
+        for v in 0..z_buffer[0].len() {
+            z_buffer[i][v] = std::f32::MIN;
+        }
+    }
+}
