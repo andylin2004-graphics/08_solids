@@ -205,19 +205,28 @@ impl Image {
         polygons.sort_by_key(|k| k.1 as i32);
         let mut x0 = polygons[0].0;
         let mut x1 = polygons[0].0;
+        let mut z0 = polygons[0].2;
+        let mut z1 = polygons[0].2;
         let y0 = polygons[0].1;
         let dx0 = (polygons[2].0 - polygons[0].0) / (polygons[2].1 - polygons[0].1);
+        let dz0 = (polygons[2].2 - polygons[0].2) / (polygons[2].1 - polygons[0].1);
         let mut dx1 = (polygons[1].0 - polygons[0].0) / (polygons[1].1 - polygons[0].1);
+        let mut dz1 = (polygons[1].2 - polygons[0].2) / (polygons[1].1 - polygons[0].1);
         let dx1_1 = (polygons[2].0 - polygons[1].0) / (polygons[2].1 - polygons[1].1);
+        let dz1_1 = (polygons[2].2 - polygons[1].2) / (polygons[2].1 - polygons[1].1);
         let mut rng = rand::thread_rng();
         let color = Color::new_color(rng.gen(), rng.gen(), rng.gen());
         for y in y0 as i32..polygons[2].1 as i32{
-            self.draw_line(x0 as i32, y,  x1 as i32, y, color);
+            self.draw_line(x0 as i32, y, z0, x1 as i32, y, z1, color);
             x0 += dx0;
             x1 += dx1;
+            z0 += dz0;
+            z1 += dz1;
             if y + 1 >= polygons[1].1 as i32{
                 dx1 = dx1_1;
+                dz1 = dz1_1;
                 x1 = polygons[1].0;
+                z1 = polygons[1].0;
             }
         }
     }
