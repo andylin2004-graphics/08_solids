@@ -14,6 +14,9 @@ impl Image {
             tmp = y0;
             y0 = y1;
             y1 = tmp;
+            let tmp: f32 = z0;
+            z0 = z1;
+            z1 = tmp;
         }
         let slope: f32 = (y1 - y0) as f32 / (x1 - x0) as f32;
         if slope > 1.0 {
