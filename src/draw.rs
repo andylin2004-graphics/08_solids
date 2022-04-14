@@ -104,8 +104,10 @@ impl Image {
             self.draw_line(
                 matrix.matrix_array[0][i] as i32,
                 matrix.matrix_array[1][i] as i32,
+                matrix.matrix_array[2][i] as f32,
                 matrix.matrix_array[0][i + 1] as i32,
                 matrix.matrix_array[1][i + 1] as i32,
+                matrix.matrix_array[2][i + 1] as f32,
                 color,
             );
         }
@@ -153,27 +155,33 @@ impl Image {
                 self.draw_line(
                     polygons.matrix_array[0][i] as i32,
                     polygons.matrix_array[1][i] as i32,
+                    polygons.matrix_array[2][i] as f32,
                     polygons.matrix_array[0][i + 1] as i32,
                     polygons.matrix_array[1][i + 1] as i32,
+                    polygons.matrix_array[2][i + 1] as f32,
                     c,
                 );
                 self.draw_line(
                     polygons.matrix_array[0][i + 1] as i32,
                     polygons.matrix_array[1][i + 1] as i32,
+                    polygons.matrix_array[2][i + 1] as f32,
                     polygons.matrix_array[0][i + 2] as i32,
                     polygons.matrix_array[1][i + 2] as i32,
+                    polygons.matrix_array[2][i + 2] as f32,
                     c,
                 );
                 self.draw_line(
                     polygons.matrix_array[0][i + 2] as i32,
                     polygons.matrix_array[1][i + 2] as i32,
+                    polygons.matrix_array[2][i + 2] as f32,
                     polygons.matrix_array[0][i] as i32,
                     polygons.matrix_array[1][i] as i32,
+                    polygons.matrix_array[2][i] as f32,
                     c,
                 );
-                let mut polygons = [(polygons.matrix_array[0][i], polygons.matrix_array[1][i]),
-                (polygons.matrix_array[0][i + 1], polygons.matrix_array[1][i + 1]),
-                (polygons.matrix_array[0][i + 2], polygons.matrix_array[1][i + 2])];
+                let mut polygons = [(polygons.matrix_array[0][i], polygons.matrix_array[1][i], polygons.matrix_array[2][i]),
+                (polygons.matrix_array[0][i + 1], polygons.matrix_array[1][i + 1], polygons.matrix_array[2][i + 1]),
+                (polygons.matrix_array[0][i + 2], polygons.matrix_array[1][i + 2], polygons.matrix_array[2][i + 2])];
                 self.scanline_convert(
                     &mut polygons,
                     0,
@@ -193,7 +201,7 @@ impl Image {
 
     Color should be set differently for each polygon.
     ====================*/
-    fn scanline_convert(&mut self, polygons: &mut [(f32, f32)], i: i32) {
+    fn scanline_convert(&mut self, polygons: &mut [(f32, f32, f32)], i: i32) {
         polygons.sort_by_key(|k| k.1 as i32);
         let mut x0 = polygons[0].0;
         let mut x1 = polygons[0].0;
@@ -204,7 +212,7 @@ impl Image {
         let mut rng = rand::thread_rng();
         let color = Color::new_color(rng.gen(), rng.gen(), rng.gen());
         for y in y0 as i32..polygons[2].1 as i32{
-            self.draw_line(x0 as i32, y, x1 as i32, y, color);
+            self.draw_line(x0 as i32, y,  x1 as i32, y, color);
             x0 += dx0;
             x1 += dx1;
             if y + 1 >= polygons[1].1 as i32{
