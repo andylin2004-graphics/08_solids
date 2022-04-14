@@ -17,7 +17,7 @@ impl Image {
     pub fn new(image_width: usize, image_height: usize) -> Image {
         Image {
             screen: vec![vec![Color::new(); image_width]; image_height],
-            z_buffer: vec![vec![0.0; image_width]; image_height],
+            z_buffer: vec![vec![f32::MIN; image_width]; image_height],
             width: image_width,
             height: image_height,
         }
