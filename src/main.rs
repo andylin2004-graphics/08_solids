@@ -26,7 +26,6 @@ fn main() {
             &mut polygons,
             &mut screen,
             color,
-            &mut z_buffer,
         );
     } else {
         parse_file(
@@ -36,7 +35,6 @@ fn main() {
             &mut polygons,
             &mut screen,
             color,
-            &mut z_buffer,
         );
     }
 }

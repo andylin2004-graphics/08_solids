@@ -8,6 +8,7 @@ use std::process::Command;
 
 pub struct Image {
     pub screen: Vec<Vec<Color>>,
+    pub z_buffer: Vec<Vec<f32>>,
     pub height: usize,
     pub width: usize,
 }
@@ -16,6 +17,7 @@ impl Image {
     pub fn new(image_width: usize, image_height: usize) -> Image {
         Image {
             screen: vec![vec![Color::new(); image_width]; image_height],
+            z_buffer: vec![vec![0.0; image_width]; image_height],
             width: image_width,
             height: image_height,
         }
@@ -61,6 +63,7 @@ impl Image {
         for i in 0..self.screen.len() {
             for v in 0..self.screen[0].len() {
                 self.screen[i][v].reset_color();
+                self.z_buffer[i][v] = f32::MIN;
             }
         }
     }

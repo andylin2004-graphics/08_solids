@@ -74,7 +74,6 @@ pub fn parse_file(
     polygons: &mut Matrix,
     screen: &mut Image,
     color: Color,
-    z_buffer: &mut Vec<Vec<f32>>,
 ) -> io::Result<()> {
     let file = File::open(&fname)?;
     let reader = BufReader::new(file);
@@ -260,7 +259,6 @@ pub fn parse_file(
             _ if doc_lines[i].starts_with('#') => {}
             "clear" => {
                 screen.clear();
-                clear_zbuffer(z_buffer);
             }
             "box" => {
                 i += 1;
