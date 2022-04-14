@@ -3,6 +3,7 @@ use crate::CurveType;
 use crate::Image;
 use crate::Matrix;
 use std::f32;
+use rand::Rng;
 
 impl Image {
     pub fn draw_line(&mut self, mut x0: i32, mut y0: i32, mut x1: i32, mut y1: i32, color: Color) {
@@ -164,7 +165,6 @@ impl Image {
                 self.scanline_convert(
                     &mut polygons,
                     0,
-                    c
                 )
             }
         }
@@ -181,7 +181,7 @@ impl Image {
 
     Color should be set differently for each polygon.
     ====================*/
-    fn scanline_convert(&mut self, polygons: &mut [(f32, f32)], i: i32, color: Color) {
+    fn scanline_convert(&mut self, polygons: &mut [(f32, f32)], i: i32) {
         polygons.sort_by_key(|k| k.1 as i32);
         let mut x0 = polygons[0].0;
         let mut x1 = polygons[0].0;
@@ -189,6 +189,8 @@ impl Image {
         let dx0 = (polygons[2].0 - polygons[0].0) / (polygons[2].1 - polygons[0].1);
         let mut dx1 = (polygons[1].0 - polygons[0].0) / (polygons[1].1 - polygons[0].1);
         let dx1_1 = (polygons[2].0 - polygons[1].0) / (polygons[2].1 - polygons[1].1);
+        let mut rng = rand::thread_rng();
+        let color = Color::new_color(rng.gen(), rng.gen(), rng.gen());
         for y in y0 as i32..polygons[2].1 as i32{
             self.draw_line(x0 as i32, y, x1 as i32, y, color);
             x0 += dx0;
