@@ -1,5 +1,5 @@
 use crate::color::Color;
-use crate::image::{Image, clear_zbuffer};
+use crate::image::Image;
 use crate::matrix::CurveType;
 use crate::matrix::Matrix;
 use std::f32;
