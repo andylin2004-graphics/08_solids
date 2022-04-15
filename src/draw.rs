@@ -182,29 +182,32 @@ impl Image {
                     polygons.matrix_array[2][i] as f32,
                     c,
                 );
-                let mut polygons = [(polygons.matrix_array[0][i], polygons.matrix_array[1][i], polygons.matrix_array[2][i]),
-                (polygons.matrix_array[0][i + 1], polygons.matrix_array[1][i + 1], polygons.matrix_array[2][i + 1]),
-                (polygons.matrix_array[0][i + 2], polygons.matrix_array[1][i + 2], polygons.matrix_array[2][i + 2])];
                 self.scanline_convert(
-                    &mut polygons,
-                    0,
+                    polygons.matrix_array[0][i],
+                    polygons.matrix_array[1][i],
+                    polygons.matrix_array[2][i],
+                    polygons.matrix_array[0][i + 1],
+                    polygons.matrix_array[1][i + 1],
+                    polygons.matrix_array[2][i + 1],
+                    polygons.matrix_array[0][i + 2],
+                    polygons.matrix_array[1][i + 2],
+                    polygons.matrix_array[2][i + 2],
                 )
             }
         }
     }
 
     /*======== void scanline_convert() ==========
-    Inputs: struct matrix *points
-            int i
-            screen s
-            zbuffer zb
+    Inputs: x0 y0 z0 x1 y1 z1 x2 y2 z2: i32
+            self screen
     Returns:
 
     Fills in polygon i by drawing consecutive horizontal (or vertical) lines.
 
     Color should be set differently for each polygon.
     ====================*/
-    fn scanline_convert(&mut self, polygons: &mut [(f32, f32, f32)], i: i32) {
+    fn scanline_convert(&mut self, x0: f32, y0: f32, z0: f32, x1: f32, y1: f32, z1: f32, x2: f32, y2: f32, z2: f32) {
+        let mut polygons = [(x0, y0, z0), (x1, y1, z1), (x2, y2, z2)];
         polygons.sort_by_key(|k| (k.1 as i32, k.0 as i32, k.2 as i32));
         let mut past_midpoint = false;
         let mut x0 = polygons[0].0;
