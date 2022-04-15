@@ -33,17 +33,17 @@ impl Matrix{
     }
     
     pub fn identity() -> Matrix{
-        let mut identityMatrix = Matrix::new(4,4);
-        for i in 0..identityMatrix.matrix_array.len(){
-            for v in 0..identityMatrix.matrix_array[0].len(){
+        let mut identity_matrix = Matrix::new(4,4);
+        for i in 0..identity_matrix.matrix_array.len(){
+            for v in 0..identity_matrix.matrix_array[0].len(){
                 if i == v{
-                    identityMatrix.matrix_array[i][v] = 1.0;
+                    identity_matrix.matrix_array[i][v] = 1.0;
                 }else{
-                    identityMatrix.matrix_array[i][v] = 0.0;
+                    identity_matrix.matrix_array[i][v] = 0.0;
                 }
             }
         }
-        return identityMatrix;
+        return identity_matrix;
     }
     
     pub fn print_matrix(&self){
