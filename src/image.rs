@@ -24,7 +24,7 @@ impl Image {
     }
 
     pub fn plot(&mut self, x: i32, y: i32, z: f32, color: Color) {
-        if z > self.z_buffer[(self.height - 1) - y as usize][x as usize] && x >= 0 && y >= 0 && x < self.width as i32 && y < self.height as i32 {
+        if x >= 0 && y >= 0 && x < self.width as i32 && y < self.height as i32 && z > self.z_buffer[(self.height - 1) - y as usize][x as usize] {
             self.screen[(self.height - 1) - y as usize][x as usize].plot_color(color);
             self.z_buffer[(self.height - 1) - y as usize][x as usize] = z;
         }
