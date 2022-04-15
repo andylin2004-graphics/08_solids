@@ -14,7 +14,7 @@ impl Image {
             tmp = y0;
             y0 = y1;
             y1 = tmp;
-            let tmp: f32 = z0;
+            let tmp = z0;
             z0 = z1;
             z1 = tmp;
         }
@@ -206,6 +206,7 @@ impl Image {
     ====================*/
     fn scanline_convert(&mut self, polygons: &mut [(f32, f32, f32)], i: i32) {
         polygons.sort_by_key(|k| k.1 as i32);
+        let mut past_midpoint = false;
         let mut x0 = polygons[0].0;
         let mut x1 = polygons[0].0;
         let mut z0 = polygons[0].2;
@@ -225,11 +226,12 @@ impl Image {
             x1 += dx1;
             z0 += dz0;
             z1 += dz1;
-            if y + 1 >= polygons[1].1 as i32{
+            if y + 1 >= polygons[1].1 as i32 && !past_midpoint{
                 dx1 = dx1_1;
                 dz1 = dz1_1;
                 x1 = polygons[1].0;
-                z1 = polygons[1].0;
+                z1 = polygons[1].2;
+                past_midpoint = true;
             }
         }
     }
