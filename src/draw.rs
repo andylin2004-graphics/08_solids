@@ -205,7 +205,7 @@ impl Image {
     Color should be set differently for each polygon.
     ====================*/
     fn scanline_convert(&mut self, polygons: &mut [(f32, f32, f32)], i: i32) {
-        polygons.sort_by_key(|k| (k.1 as i32, k.0 as i32));
+        polygons.sort_by_key(|k| (k.1 as i32, k.0 as i32, k.2 as i32));
         let mut past_midpoint = false;
         let mut x0 = polygons[0].0;
         let mut x1 = polygons[0].0;
