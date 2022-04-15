@@ -155,33 +155,33 @@ impl Image {
             // let dot_n_v = 1.0;
             let dot_n_v = nx * vx + ny * vy + nz * vz;
             if dot_n_v > 0.0 {
-                self.draw_line(
-                    polygons.matrix_array[0][i] as i32,
-                    polygons.matrix_array[1][i] as i32,
-                    polygons.matrix_array[2][i] as f32,
-                    polygons.matrix_array[0][i + 1] as i32,
-                    polygons.matrix_array[1][i + 1] as i32,
-                    polygons.matrix_array[2][i + 1] as f32,
-                    c,
-                );
-                self.draw_line(
-                    polygons.matrix_array[0][i + 1] as i32,
-                    polygons.matrix_array[1][i + 1] as i32,
-                    polygons.matrix_array[2][i + 1] as f32,
-                    polygons.matrix_array[0][i + 2] as i32,
-                    polygons.matrix_array[1][i + 2] as i32,
-                    polygons.matrix_array[2][i + 2] as f32,
-                    c,
-                );
-                self.draw_line(
-                    polygons.matrix_array[0][i + 2] as i32,
-                    polygons.matrix_array[1][i + 2] as i32,
-                    polygons.matrix_array[2][i + 2] as f32,
-                    polygons.matrix_array[0][i] as i32,
-                    polygons.matrix_array[1][i] as i32,
-                    polygons.matrix_array[2][i] as f32,
-                    c,
-                );
+                // self.draw_line(
+                //     polygons.matrix_array[0][i] as i32,
+                //     polygons.matrix_array[1][i] as i32,
+                //     polygons.matrix_array[2][i] as f32,
+                //     polygons.matrix_array[0][i + 1] as i32,
+                //     polygons.matrix_array[1][i + 1] as i32,
+                //     polygons.matrix_array[2][i + 1] as f32,
+                //     c,
+                // );
+                // self.draw_line(
+                //     polygons.matrix_array[0][i + 1] as i32,
+                //     polygons.matrix_array[1][i + 1] as i32,
+                //     polygons.matrix_array[2][i + 1] as f32,
+                //     polygons.matrix_array[0][i + 2] as i32,
+                //     polygons.matrix_array[1][i + 2] as i32,
+                //     polygons.matrix_array[2][i + 2] as f32,
+                //     c,
+                // );
+                // self.draw_line(
+                //     polygons.matrix_array[0][i + 2] as i32,
+                //     polygons.matrix_array[1][i + 2] as i32,
+                //     polygons.matrix_array[2][i + 2] as f32,
+                //     polygons.matrix_array[0][i] as i32,
+                //     polygons.matrix_array[1][i] as i32,
+                //     polygons.matrix_array[2][i] as f32,
+                //     c,
+                // );
                 self.scanline_convert(
                     polygons.matrix_array[0][i],
                     polygons.matrix_array[1][i],
