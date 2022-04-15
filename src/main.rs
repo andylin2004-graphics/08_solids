@@ -17,7 +17,6 @@ fn main() {
     let mut edges = Matrix::new(0, 0);
     let mut polygons = Matrix::new(0, 0);
     let mut cstack = vec![Matrix::new(0,0); 0];
-    let mut z_buffer = vec![vec![0.0; 500]; 500];
     if args.len() > 1 && args[1] == "art" {
         parse_file(
             "basketball_script",
