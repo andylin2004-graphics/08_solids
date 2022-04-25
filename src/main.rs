@@ -4,6 +4,7 @@ use matrix::CurveType;
 use matrix::Matrix;
 use parser::parse_file;
 use std::env;
+use rand::Rng;
 mod color;
 mod draw;
 mod image;
@@ -19,7 +20,7 @@ fn main() {
     let mut cstack = vec![Matrix::new(0,0); 0];
     if args.len() > 1 && args[1] == "art" {
         parse_file(
-            "basketball_script",
+            "marill",
             &mut cstack,
             &mut edges,
             &mut polygons,

@@ -1,0 +1,51 @@
+push
+sphere
+200 250 0 100
+sphere
+400 200 -250 20
+box
+270 200 10 120 10 10
+move
+150 350 0
+sphere
+0 0 0 30
+push
+move
+100 0 0
+sphere
+0 0 0 30
+push
+move
+30 -100 400
+push
+rotate
+z 30
+box
+0 0 0 40 10 10
+pop
+push
+move
+-30 -75 0
+rotate
+z -45
+box
+0 0 0 40 10 10
+pop
+pop
+pop
+push
+move
+-40 -110 0
+push
+rotate
+z 150
+box
+0 0 300 40 10 10
+pop
+move
+40 -75 0
+rotate
+z -135
+box
+0 0 300 40 10 10
+display
