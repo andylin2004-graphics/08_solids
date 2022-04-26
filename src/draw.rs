@@ -7,7 +7,10 @@ use rand::Rng;
 
 impl Image {
     pub fn draw_line(&mut self, mut x0: i32, mut y0: i32, mut z0: f32, mut x1: i32, mut y1: i32, mut z1: f32, color: Color) {
-        // println!("x0: {}, y0: {}, x1: {}, y1: {}", x0, y0, x1, y1);
+        println!("x0: {}, y0: {}, x1: {}, y1: {}", x0, y0, x1, y1);
+        if (x0 >= 500 &&  x1 >= 500) || (y0 >= 500 && y1 >= 500) || (x0 < 0 &&  x1 < 0) || (y0 < 0 && y1 < 0){
+            return;
+        }
         if x0 > x1 {
             let mut tmp = x0;
             x0 = x1;
@@ -30,15 +33,18 @@ impl Image {
             let b = -2 * (x1 - x0);
             let mut d = 1 / 2 * a + b; // emphasis on controlling y
             while y <= y1 {
-                self.plot(x, y, z, color);
-                if d < 0 {
-                    // as b dominates a, and we need to hit 0
-                    x += 1;
-                    d += a;
+                if self.plot(x, y, z, color){
+                    if d < 0 {
+                        // as b dominates a, and we need to hit 0
+                        x += 1;
+                        d += a;
+                    }
+                    y += 1;
+                    z += z_rate;
+                    d += b;
+                }else{
+                    break;
                 }
-                y += 1;
-                z += z_rate;
-                d += b;
             }
         } else if slope >= 0.0 {
             // octant 1
@@ -50,15 +56,18 @@ impl Image {
             let b = -2 * (x1 - x0);
             let mut d = a + 1 / 2 * b; // emphasis on controlling x
             while x <= x1 {
-                self.plot(x, y, z, color);
-                if d > 0 {
-                    // as a dominates b, and we need to hit 0
-                    y += 1;
-                    d += b;
+                if self.plot(x, y, z, color){
+                    if d > 0 {
+                        // as a dominates b, and we need to hit 0
+                        y += 1;
+                        d += b;
+                    }
+                    x += 1;
+                    z += z_rate;
+                    d += a;
+                }else{
+                    break;
                 }
-                x += 1;
-                z += z_rate;
-                d += a;
             }
         } else if slope < -1.0 {
             // octant 7
@@ -70,15 +79,18 @@ impl Image {
             let b = 2 * (x1 - x0);
             let mut d = 1 / 2 * a + b; // emphasis on controlling x
             while y >= y1 {
-                self.plot(x, y, z, color);
-                if d < 0 {
-                    // as a dominates b, and we need to hit 0
-                    x += 1;
-                    d -= a; // basically adding
+                if self.plot(x, y, z, color){
+                    if d < 0 {
+                        // as a dominates b, and we need to hit 0
+                        x += 1;
+                        d -= a; // basically adding
+                    }
+                    y -= 1;
+                    z += z_rate;
+                    d -= b; // basically adding
+                }else{
+                    break;
                 }
-                y -= 1;
-                z += z_rate;
-                d -= b; // basically adding
             }
         } else {
             // octant 8
@@ -90,15 +102,18 @@ impl Image {
             let b = 2 * (x1 - x0);
             let mut d = a + 1 / 2 * b; // emphasis on controlling y
             while x <= x1 {
-                self.plot(x, y, z, color);
-                if d > 0 {
-                    // as b dominates a, and we need to hit 0
-                    y -= 1;
-                    d -= b; // basically adding
+                if self.plot(x, y, z, color){
+                    if d > 0 {
+                        // as b dominates a, and we need to hit 0
+                        y -= 1;
+                        d -= b; // basically adding
+                    }
+                    x += 1;
+                    z += z_rate;
+                    d -= a; // basically adding
+                }else{
+                    break;
                 }
-                x += 1;
-                z += z_rate;
-                d -= a; // basically adding
             }
         }
     }
@@ -210,21 +225,27 @@ impl Image {
     fn scanline_convert(&mut self, x0: f32, y0: f32, z0: f32, x1: f32, y1: f32, z1: f32, x2: f32, y2: f32, z2: f32) {
         let mut polygons = [(x0, y0, z0), (x1, y1, z1), (x2, y2, z2)];
         polygons.sort_by_key(|k| (k.1 as i32, k.0 as i32, k.2 as i32));
+        println!("{:?}", polygons);
         let mut past_midpoint = false;
         let mut x0 = polygons[0].0;
         let mut x1 = polygons[0].0;
         let mut z0 = polygons[0].2;
         let mut z1 = polygons[0].2;
         let y0 = polygons[0].1;
-        let dx0 = (polygons[2].0 - polygons[0].0) / (polygons[2].1 - polygons[0].1);
-        let dz0 = (polygons[2].2 - polygons[0].2) / (polygons[2].1 - polygons[0].1);
+        let mut dx0 = (polygons[2].0 - polygons[0].0) / (polygons[2].1 - polygons[0].1);
+        let mut dz0 = (polygons[2].2 - polygons[0].2) / (polygons[2].1 - polygons[0].1);
         let mut dx1 = (polygons[1].0 - polygons[0].0) / (polygons[1].1 - polygons[0].1);
         let mut dz1 = (polygons[1].2 - polygons[0].2) / (polygons[1].1 - polygons[0].1);
         let dx1_1 = (polygons[2].0 - polygons[1].0) / (polygons[2].1 - polygons[1].1);
         let dz1_1 = (polygons[2].2 - polygons[1].2) / (polygons[2].1 - polygons[1].1);
-        if (polygons[1].1 - polygons[0].1) as i32 == 0{
-            dx1 = dx1_1;
-            dz1 = dz1_1;
+        if (polygons[1].1 as i32 - polygons[0].1 as i32) as i32 == 0{
+            if (polygons[2].1 as i32 - polygons[1].1 as i32) == 0{
+                dx1 = (polygons[1].0 - polygons[0].0) / (polygons[2].1 - polygons[0].1);
+                dz1 = (polygons[1].0 - polygons[0].0) / (polygons[2].1 - polygons[0].1);
+            }else{
+                dx1 = dx1_1;
+                dz1 = dz1_1;
+            }
         }
         if (polygons[2].1 - polygons[1].1) as i32 == 0{
             past_midpoint = true
