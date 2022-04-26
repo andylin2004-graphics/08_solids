@@ -209,67 +209,41 @@ impl Image {
     ====================*/
     fn scanline_convert(&mut self, x0: f32, y0: f32, z0: f32, x1: f32, y1: f32, z1: f32, x2: f32, y2: f32, z2: f32) {
         let mut polygons = [(x0, y0, z0), (x1, y1, z1), (x2, y2, z2)];
-        // println!("\n{:?}", polygons);
         polygons.sort_by_key(|k| (k.1 as i32, k.0 as i32, k.2 as i32));
         let mut past_midpoint = false;
-        if (polygons[1].0 - polygons[0].0) as i32 == 0 || (polygons[2].0 - polygons[0].0) as i32 == 0 || (polygons[2].0 - polygons[1].0) as i32 == 0{
-            let mut x0 = polygons[0].0;
-            let mut x1 = polygons[0].0;
-            let mut z0 = polygons[0].2;
-            let mut z1 = polygons[0].2;
-            let y0 = polygons[0].1;
-            let dx0 = (polygons[2].0 - polygons[0].0) / (polygons[2].1 - polygons[0].1);
-            let dz0 = (polygons[2].2 - polygons[0].2) / (polygons[2].1 - polygons[0].1);
-            let mut dx1 = (polygons[1].0 - polygons[0].0) / (polygons[1].1 - polygons[0].1);
-            let mut dz1 = (polygons[1].2 - polygons[0].2) / (polygons[1].1 - polygons[0].1);
-            let dx1_1 = (polygons[2].0 - polygons[1].0) / (polygons[2].1 - polygons[1].1);
-            let dz1_1 = (polygons[2].2 - polygons[1].2) / (polygons[2].1 - polygons[1].1);
-            let mut rng = rand::thread_rng();
-            let color = Color::new_color(rng.gen(), rng.gen(), rng.gen());
-            // for y in y0 as i32..=y0 as i32+1 {
-            for y in y0 as i32..=polygons[2].1 as i32{
-                self.draw_line((x0 as i32).abs(), y, z0, (x1 as i32).abs(), y, z1, color);
-                x0 += dx0;
-                x1 += dx1;
-                z0 += dz0;
-                z1 += dz1;
-                if y >= polygons[1].1 as i32 && !past_midpoint{
-                    dx1 = dx1_1;
-                    dz1 = dz1_1;
-                    x1 = polygons[1].0;
-                    z1 = polygons[1].2;
-                    past_midpoint = true;
-                }
-            }
-        }else{
-            polygons.sort_by_key(|k| (k.0 as i32, k.1 as i32, k.2 as i32));
-            let mut y0 = polygons[0].1;
-            let mut y1 = polygons[0].1;
-            let mut z0 = polygons[0].2;
-            let mut z1 = polygons[0].2;
-            let x0 = polygons[0].0;
-            let dy0 = (polygons[2].1 - polygons[0].1) / (polygons[2].0 - polygons[0].0);
-            let dz0 = (polygons[2].2 - polygons[0].2) / (polygons[2].0 - polygons[0].0);
-            let mut dy1 = (polygons[1].1 - polygons[0].1) / (polygons[1].0 - polygons[0].0);
-            let mut dz1 = (polygons[1].2 - polygons[0].2) / (polygons[1].0 - polygons[0].0);
-            let dy1_1 = (polygons[2].1 - polygons[1].1) / (polygons[2].0 - polygons[1].0);
-            let dz1_1 = (polygons[2].2 - polygons[1].2) / (polygons[2].0 - polygons[1].0);
-            let mut rng = rand::thread_rng();
-            let color = Color::new_color(rng.gen(), rng.gen(), rng.gen());
-            // for x in x0 as i32..=x0 as i32+1 {
-            for x in x0 as i32..=polygons[2].0 as i32{
-                self.draw_line(x, y0 as i32, z0, x, y1 as i32, z1, color);
-                y0 += dy0;
-                y1 += dy1;
-                z0 += dz0;
-                z1 += dz1;
-                if x >= polygons[1].0 as i32 && !past_midpoint{
-                    dy1 = dy1_1;
-                    dz1 = dz1_1;
-                    y1 = polygons[1].1;
-                    z1 = polygons[1].2;
-                    past_midpoint = true;
-                }
+        let mut x0 = polygons[0].0;
+        let mut x1 = polygons[0].0;
+        let mut z0 = polygons[0].2;
+        let mut z1 = polygons[0].2;
+        let y0 = polygons[0].1;
+        let dx0 = (polygons[2].0 - polygons[0].0) / (polygons[2].1 - polygons[0].1);
+        let dz0 = (polygons[2].2 - polygons[0].2) / (polygons[2].1 - polygons[0].1);
+        let mut dx1 = (polygons[1].0 - polygons[0].0) / (polygons[1].1 - polygons[0].1);
+        let mut dz1 = (polygons[1].2 - polygons[0].2) / (polygons[1].1 - polygons[0].1);
+        let dx1_1 = (polygons[2].0 - polygons[1].0) / (polygons[2].1 - polygons[1].1);
+        let dz1_1 = (polygons[2].2 - polygons[1].2) / (polygons[2].1 - polygons[1].1);
+        if (polygons[1].1 - polygons[0].1) as i32 == 0{
+            dx1 = dx1_1;
+            dz1 = dz1_1;
+        }
+        if (polygons[2].1 - polygons[1].1) as i32 == 0{
+            past_midpoint = true
+        }
+        let mut rng = rand::thread_rng();
+        let color = Color::new_color(rng.gen(), rng.gen(), rng.gen());
+        // for y in y0 as i32..=y0 as i32+1 {
+        for y in y0 as i32..=polygons[2].1 as i32{
+            self.draw_line((x0 as i32).abs(), y, z0, (x1 as i32).abs(), y, z1, color);
+            x0 += dx0;
+            x1 += dx1;
+            z0 += dz0;
+            z1 += dz1;
+            if y >= polygons[1].1 as i32 && !past_midpoint{
+                dx1 = dx1_1;
+                dz1 = dz1_1;
+                x1 = polygons[1].0;
+                z1 = polygons[1].2;
+                past_midpoint = true;
             }
         }
     }
