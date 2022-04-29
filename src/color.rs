@@ -2,9 +2,9 @@ use std::fmt;
 
 #[derive(Copy, Clone)]
 pub struct Color{
-    pub r: i32,
-    pub g: i32,
-    pub b: i32,
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
 }
 
 impl Color{
@@ -12,7 +12,7 @@ impl Color{
         Color{r: 0, g:0, b:0}
     }
 
-    pub fn new_color(r: i32, g: i32, b: i32) -> Color{
+    pub fn new_color(r: u8, g: u8, b: u8) -> Color{
         Color{r: r, g: g, b: b}
     }
     
