@@ -231,25 +231,22 @@ impl Image {
         let mut x1 = polygons[0].0;
         let mut z0 = polygons[0].2;
         let mut z1 = polygons[0].2;
-        let y0 = polygons[0].1;
-        let dx0 = if (polygons[2].1 - polygons[0].1) as i32 > 0 {(polygons[2].0 - polygons[0].0) / (polygons[2].1 - polygons[0].1)} else {0.0};
-        let dz0 = if (polygons[2].1 - polygons[0].1) as i32 > 0 {(polygons[2].2 - polygons[0].2) / (polygons[2].1 - polygons[0].1)} else {0.0};
-        let mut dx1 = if (polygons[1].1 - polygons[0].1) as i32 > 0 {(polygons[1].0 - polygons[0].0) / (polygons[1].1 - polygons[0].1)} else {0.0};
-        let mut dz1 = if (polygons[1].1 - polygons[0].1) as i32 > 0 {(polygons[1].2 - polygons[0].2) / (polygons[1].1 - polygons[0].1)} else {0.0};
-        let dx1_1 = if (polygons[2].1 - polygons[1].1) as i32 > 0 {(polygons[2].0 - polygons[1].0) / (polygons[2].1 - polygons[1].1)} else {0.0};
-        let dz1_1 = if (polygons[2].1 - polygons[1].1) as i32 > 0 {(polygons[2].2 - polygons[1].2) / (polygons[2].1 - polygons[1].1)} else {0.0};
+        let d0 = (polygons[2].1 as i32 - polygons[0].1 as i32) + 1;
+        let d1 = (polygons[1].1 as i32 - polygons[0].1 as i32) + 1;
+        let d2 = (polygons[2].1 as i32 - polygons[1].1 as i32) + 1;
+        let dx0 = if d0 > 0 {(polygons[2].0 - polygons[0].0) / (d0) as f32} else {0.0};
+        let dz0 = if d0 > 0 {(polygons[2].2 - polygons[0].2) / (d0) as f32} else {0.0};
+        let mut dx1 = if d1 > 0 {(polygons[1].0 - polygons[0].0) / (d1) as f32} else {0.0};
+        let mut dz1 = if d1 > 0 {(polygons[1].2 - polygons[0].2) / (d1) as f32} else {0.0};
+        let dx1_1 = if d2 > 0 {(polygons[2].0 - polygons[1].0) / (d2) as f32} else {0.0};
+        let dz1_1 = if d2 > 0 {(polygons[2].2 - polygons[1].2) / (d2) as f32} else {0.0};
         if (polygons[2].1 - polygons[1].1) as i32 == 0{
             past_midpoint = true
         }
         let mut rng = rand::thread_rng();
         let color = Color::new_color(rng.gen(), rng.gen(), rng.gen());
         // for y in y0 as i32..=y0 as i32+1 {
-        for y in y0 as i32..=polygons[2].1 as i32{
-            self.draw_line((x0 as i32).abs(), y, z0, (x1 as i32).abs(), y, z1, color);
-            x0 += dx0;
-            x1 += dx1;
-            z0 += dz0;
-            z1 += dz1;
+        for y in polygons[0].1 as i32..=polygons[2].1 as i32{
             if y >= polygons[1].1 as i32 && !past_midpoint{
                 dx1 = dx1_1;
                 dz1 = dz1_1;
@@ -257,6 +254,11 @@ impl Image {
                 z1 = polygons[1].2;
                 past_midpoint = true;
             }
+            self.draw_line((x0 as i32).abs(), y, z0, (x1 as i32).abs(), y, z1, color);
+            x0 += dx0;
+            x1 += dx1;
+            z0 += dz0;
+            z1 += dz1;
         }
     }
 }
